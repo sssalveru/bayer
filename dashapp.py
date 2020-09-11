@@ -9,8 +9,9 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
+import dash_bootstrap_components as dbc
 
-app = dash.Dash(__name__)
+app = dash.Dash(__name__,external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 data = pd.read_csv("C:\\Users\\Sampreeth Salveru\\Downloads\\AG_Discrete_DS06-Jul-2020.csv")
 filter_col = [col for col in data if col.startswith(('Drug','Load'))]
@@ -214,42 +215,16 @@ def campaigns(col):
     return shades
 
 
-# def make_graph(col):
-#     mean = excel.loc[col,"Mean"]
-#     ucl = excel.loc[col,"UCL"]
-#     lcl = excel.loc[col,"LCL"]
-#     usl = excel.loc[col,"USL"]
-#     lsl = excel.loc[col,"LSL"]
-#     action = excel.loc[col,"Action"]
-#     action1 = excel.loc[col,"Action1"]
-#     units = excel.loc[col,"Units"]
-    
-#     fig.add_trace(go.Scatter(x=list(data.dropna(subset=[col], how = 'any').Date),
-#                          y=list(data[col].dropna()),
-#                          name = col,
-#                          mode="lines+markers",
-#                          line = dict(color="black")
-#                          ))
-
-#     make_rules(col, mean, ucl, lcl)
-#     make_lines(col,mean, ucl, lcl, usl, lsl, action,action1)
-
-#     fig.update_xaxes(rangeslider_visible=True)
-#     fig.update_layout(showlegend=True,title_text="Kovaltry " + col+"  " + datetime.today().strftime('%Y-%m-%d'),
-#                       plot_bgcolor='rgb(229,229,229)',
-#                       yaxis_title=f"{col}  {units}"
-#                      )
-#     fig.update_layout(shapes=campaigns(col), height = 700)
-
-# fig = go.Figure()
-# make_graph(filter_col[0])
-
 
 app.layout = html.Div([
-
-    html.H1("CPV Interactive Dashboard", style={'text-align': 'left'}),
+    dbc.Row(dbc.Col(html.H2("CPV Interactive Dashboard"),
+                    width={'size':6, 'offset': 1}
+                   )),
     html.Br(),
-    dcc.Dropdown(id='col', options = col_options, value=filter_col[0]),
+    dbc.Row(dbc.Col(dcc.Dropdown(id='col', options = col_options, value=filter_col[0]),
+                    width={"size":3}
+                    )
+            ),
 
     dcc.Graph(id='graph', figure={})
 
